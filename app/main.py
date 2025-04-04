@@ -38,13 +38,14 @@ def regression_analysis(data, dependent_var, independent_vars):
 
 if __name__ == '__main__':
     df, meta = pyspssio.read_sav("cow4cash_raw_mean.sav")
-    print(df.columns)
 
     trust_columns = [col for col in df.columns if 'trust' in col]
     time_columns = [col for col in df.columns if 'time' in col]
     return_columns = [col for col in df.columns if 'return' in col]
     risk_columns = [col for col in df.columns if 'risk' in col]
     intent_columns = [col for col in df.columns if 'intent' in col]
+
+    print("###### Cronbach's alpha ###")
 
     # Calculate Cronbach's alpha of trust columns
     print(f"Cronbach's alpha of trust: {conbrach_alpha(df, trust_columns)}")
@@ -56,15 +57,16 @@ if __name__ == '__main__':
     print(f"Cronbach's alpha of return: {conbrach_alpha(df, risk_columns)}")
 
     print("###### Regression Analysis ###")
-
     regression_all, anova_results_all = regression_analysis(df, intent_columns[0], ['A_TRUST', 'A_TIME', 'A_RETURN', 'A_RISK'])
     print(f"regression_all:\n {regression_all}")
     print(f"anova_results_all:\n {anova_results_all}")
 
+    print("\n###### Regression Analysis of trust ###")
     regression_trust, anova_results_trust = regression_analysis(df, intent_columns[0], ['A_TRUST'])
     print(f"regression_trust:\n {regression_trust}")
     print(f"anova_results_trust:\n {anova_results_trust}")
 
+    print("\n###### Regression Analysis of return ###")
     regression_time, anova_results_time = regression_analysis(df, intent_columns[0], ['A_TIME'])
     print(f"regression_time:\n {regression_time}")
     print(f"anova_results_time:\n {anova_results_time}")
