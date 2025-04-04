@@ -1,7 +1,25 @@
 import pyspssio
 import pingouin as pg
 import statsmodels.formula.api as smf
+from matplotlib import pyplot as plt
 from statsmodels.stats.anova import anova_lm
+import seaborn as sns
+
+
+def plot_scatter(data, x_var, y_var):
+    """
+    Plot a scatter plot to visualize the correlation between two variables.
+
+    :param data: DataFrame containing the data
+    :param x_var: Name of the x variable
+    :param y_var: Name of the y variable
+    """
+    sns.scatterplot(x=x_var, y=y_var, data=data)
+    plt.xlabel(x_var)
+    plt.ylabel(y_var)
+    plt.title(f'Scatter Plot of {y_var} vs {x_var}')
+    plt.show()
+
 
 def conbrach_alpha(data, columns):
     """
@@ -38,7 +56,8 @@ def regression_analysis(data, dependent_var, independent_vars):
     p_values = model.pvalues
     t_values = model.tvalues.abs()
 
-    return { "summary" : model.summary(),
+    return {"model" : model,
+            "summary" : model.summary(),
              "anova_results" : anova_results,
              "p_values" : p_values,
              "t_values" : t_values,
@@ -52,6 +71,7 @@ if __name__ == '__main__':
     return_columns = [col for col in df.columns if 'return' in col]
     risk_columns = [col for col in df.columns if 'risk' in col]
     intent_columns = [col for col in df.columns if 'intent' in col]
+    print(df.columns)
 
     print("###### Cronbach's alpha ###")
 
@@ -86,3 +106,7 @@ if __name__ == '__main__':
     print(f"t_values_time:\n {regression_time['t_values']}")
 
 
+    plot_scatter(df, 'intent1', 'A_TRUST')
+    plot_scatter(df, 'intent1', 'A_TIME')
+    plot_scatter(df, 'intent1', 'A_RETURN')
+    plot_scatter(df, 'intent1', 'A_RISK')
