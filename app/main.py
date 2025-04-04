@@ -34,7 +34,15 @@ def regression_analysis(data, dependent_var, independent_vars):
     # Get the ANOVA table
     anova_results = anova_lm(model)
 
-    return model.summary(), anova_results
+    # Extract p-values
+    p_values = model.pvalues
+    t_values = model.tvalues.abs()
+
+    return { "summary" : model.summary(),
+             "anova_results" : anova_results,
+             "p_values" : p_values,
+             "t_values" : t_values,
+             }
 
 if __name__ == '__main__':
     df, meta = pyspssio.read_sav("cow4cash_raw_mean.sav")
@@ -54,21 +62,27 @@ if __name__ == '__main__':
     # Calculate Cronbach's alpha of return columns
     print(f"Cronbach's alpha of return: {conbrach_alpha(df, return_columns)}")
     # Calculate Cronbach's alpha of risk columns
-    print(f"Cronbach's alpha of return: {conbrach_alpha(df, risk_columns)}")
+    print(f"Cronbach's alpha of risk: {conbrach_alpha(df, risk_columns)}")
 
     print("###### Regression Analysis ###")
-    regression_all, anova_results_all = regression_analysis(df, intent_columns[0], ['A_TRUST', 'A_TIME', 'A_RETURN', 'A_RISK'])
-    print(f"regression_all:\n {regression_all}")
-    print(f"anova_results_all:\n {anova_results_all}")
+    regression_all = regression_analysis(df, intent_columns[0], ['A_TRUST', 'A_TIME', 'A_RETURN', 'A_RISK'])
+    print(f"regression_all:\n {regression_all['summary']}")
+    print(f"anova_results_all:\n {regression_all['anova_results']}")
+    print(f"p_values_all:\n {regression_all['p_values']}")
+    print(f"t_values_all:\n {regression_all['t_values']}")
 
     print("\n###### Regression Analysis of trust ###")
-    regression_trust, anova_results_trust = regression_analysis(df, intent_columns[0], ['A_TRUST'])
-    print(f"regression_trust:\n {regression_trust}")
-    print(f"anova_results_trust:\n {anova_results_trust}")
+    regression_trust = regression_analysis(df, intent_columns[0], ['A_TRUST'])
+    print(f"regression_trust:\n {regression_trust['summary']}")
+    print(f"anova_results_trust:\n {regression_trust['anova_results']}")
+    print(f"p_values_trust:\n {regression_trust['p_values']}")
+    print(f"t_values_trust:\n {regression_trust['t_values']}")
 
     print("\n###### Regression Analysis of return ###")
-    regression_time, anova_results_time = regression_analysis(df, intent_columns[0], ['A_TIME'])
-    print(f"regression_time:\n {regression_time}")
-    print(f"anova_results_time:\n {anova_results_time}")
+    regression_time = regression_analysis(df, intent_columns[0], ['A_TIME'])
+    print(f"regression_time:\n {[regression_time['summary']]}")
+    print(f"anova_results_time:\n {regression_time['anova_results']}")
+    print(f"p_values_time:\n {regression_time['p_values']}")
+    print(f"t_values_time:\n {regression_time['t_values']}")
 
 
